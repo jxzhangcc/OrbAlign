@@ -75,7 +75,7 @@ def gen_SVDO(mfn, filename0, fnid, Stol=1e-6, Ntol=3.0e-5):
         Nepf0 = f0['trafomo'][spin].dot(f0['density'][spin]).dot(f0['trafomo'][spin].T).trace() * maxspin / 2
         Nep0 = int(np.round(Nepf0))
         assert np.isclose(Nep0, Nepf0)
-        print('#electrons', Neps, Nep0, sep='\n')
+        print('#electrons in each fragment:', Neps, '#electrons in whole molecule:', Nep0, sep='\n')
         
         S0 = f0['overlap']
         dmao0 = f0['density'][spin]
