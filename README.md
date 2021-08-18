@@ -198,4 +198,8 @@ In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an e
     ```
     A similar diagonalization step is performed on the "unmatched" orbitals of the reference state if a) there are more electrons in fragments than in whole molecule; or b) there are very small eigenvalues appearing during alignment.
 
+## Relevant Publications
+For application in gold clusters, see: https://pubs.acs.org/doi/10.1021/acs.inorgchem.0c00649
+For application in metallaaromatics, see: Hua Y., Zhang J.-X., et al, to be submitted
+
 
