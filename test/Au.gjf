@@ -1,1 +1,12 @@
-../_test/Au.gjf
+%chk=Au.chk
+#p pbe1pbe/def2TZVP pop=nboread int=ultrafine nosymm
+
+Au
+
+1 1
+ Au                 0.00000000    0.00000000    0.00000000
+
+ $nbo archive filename=Au BNDIDX SKIPBO $end
+
+
+
