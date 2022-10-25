@@ -218,8 +218,8 @@ In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an e
     For spin-polarized systems, everything will be done twice, for alpha and beta space respectively.
 
 ## Relevant Publications
-For more details of the method, see: Zhang J.-X., Sheong F. K., et al. to be submitted
-For application in gold clusters, see: https://pubs.acs.org/doi/10.1021/acs.inorgchem.0c00649
-For application in metallaaromatics, see: Hua Y., Zhang J.-X., et al. to be submitted
+- For more details of the method, see: Zhang J.-X., Sheong F. K., et al. to be submitted
+- For application in gold clusters, see: https://pubs.acs.org/doi/10.1021/acs.inorgchem.0c00649
+- For application in metallaaromatics, see: Hua Y., Zhang J.-X., et al. to be submitted
 
 
