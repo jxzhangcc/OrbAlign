@@ -1,0 +1,11 @@
+%chk=F-8e.chk
+#p pbe1pbe/def2TZVP gfinput pop=(minimal,nboread) int=ultrafine scf=(dsymm,symm) symm=pg=Ih
+
+F-8e
+
+-1 1
+ F
+
+ $nbo archive filename=F-8e skipbo bndidx $end
+
+

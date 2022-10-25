@@ -1,0 +1,16 @@
+%chk=CF3_n1-nosymm.chk
+%nprocs=4
+%mem=2GB
+#p pbe1pbe/def2TZVP gfinput pop=nbo6read int=ultrafine
+
+CF3_n1-nosymm
+
+-1 1
+ C                  0.00000000    0.00000000    0.54868100
+ F                  0.00000000    1.25691800   -0.12192900
+ F                  1.08852300   -0.62845900   -0.12192900
+ F                 -1.08852300   -0.62845900   -0.12192900
+
+ $nbo archive filename=CF3_n1-nosymm BNDIDX SKIPBO $end
+
+

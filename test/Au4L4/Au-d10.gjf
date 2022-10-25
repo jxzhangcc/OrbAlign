@@ -1,0 +1,13 @@
+%chk=Au-d10.chk
+#p pbe1pbe/def2TZVP guess=alter gfinput pop=nboread int=ultrafine scf=(dsymm,symm) symm=pg=Ih
+
+Au-d10
+
+1 1
+ Au
+
+ 5 10
+
+ $nbo archive filename=Au-d10 skipbo bndidx $end
+
+

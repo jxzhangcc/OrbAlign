@@ -17,7 +17,7 @@ The overall workflow of OrbAlign basically involves the following steps:
 - Perform quantum chemistry calculation on each fragment
 - Align
 
-In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an example. All mentioned files can be found in OrbAlign/test/
+In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an example. All mentioned files can be found in the `test` directory under the same root of this README file.
 
 1. Perform Gaussian calculation on the molecule of interest
 
@@ -28,9 +28,9 @@ In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an e
     ```
     %chk=Au4L4-nosymm.chk
     #p pbe1pbe/def2TZVP pop=nboread nosymm
-    
+
     Au4L4-nosymm
-    
+
     2 1
      Au                 0.98780500    0.98780500    0.98780500
      Au                -0.98780500   -0.98780500    0.98780500
@@ -67,7 +67,9 @@ In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an e
     **Output**
     - *Au4L4-nosymm.log*
     - *Au4L4-nosymm.fchk*
-    - *AU4L4-nosymm.47*
+    - *Au4L4-nosymm.47*
+
+    Depending on the NBO version you use in Gaussian, the output filename might be in upper case, i.e. `AU4L4-NOSYMM.47`, in which case you should manually rename it into lower case. Same for all Gaussian calculations below.
 
 2. Divide the molecule into fragments
 
@@ -100,7 +102,7 @@ In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an e
 
     **Command**
     ```
-    python autoSVDO.py Au4L4-nosymm.gjf Au4L4.id
+    python autofrag.py Au4L4-nosymm.gjf Au4L4.id
     ```
     This script will automatically generate the Gaussian input files for each fragment except those with pre-specified .47 filenames (all Au fragments in our example). As mentioned above, you can always ignore this usage and leave blanck the last column of Au4L4.id, in which case there will be four more .gjf files generated in this step.
 
@@ -118,6 +120,7 @@ In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an e
     Now, run Gaussian calulation on each fragment. The Gaussian input files automatically prepared in the last step should just work, but it's still recommended to take a look at their contents to make sure they are legal Gaussian input files.
 
     **Input**
+    - *Au-d10.gjf*
     - *Au4L4-nosymm-L-1-p0.gjf*
     - *Au4L4-nosymm-L-2-p0.gjf*
     - *Au4L4-nosymm-L-3-p0.gjf*
@@ -129,12 +132,14 @@ In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an e
     ```
 
     **Output**
-    - *AU4L4-NOSYMM-L-1-P0.47*
-    - *AU4L4-NOSYMM-L-2-P0.47*
-    - *AU4L4-NOSYMM-L-3-P0.47*
-    - *AU4L4-NOSYMM-L-4-P0.47*
+    - *Au-d10.47*
+    - *Au4L4-nosymm-L-1-p0.47*
+    - *Au4L4-nosymm-L-2-p0.47*
+    - *Au4L4-nosymm-L-3-p0.47*
+    - *Au4L4-nosymm-L-4-p0.47*
 
     Among all output files from Gaussian, only the .47 files are useful in the following step. If you prefer your own .47 filenames when performing Gaussian calculations, change them back to these default names or make sure they are consistent with the filenames in the `Au4L4.id.rev` file so that the program can still properly recognize them.
+    It should be noted that the `Au-d10.gjf` job contains extra keywords to ensure the obtained wavefunction is a "d10" configuration, not a "d9s1" one. This is because Au atom prefers d9s1 configuration when isolated, but prefers d10 configuration in usual chemical environments, which has to be taken into consideration for a meaningful analysis.
 
 4. Align
 
@@ -142,64 +147,79 @@ In the following tutorial, I will use the cluster compound [Au4(PH3)4]2+ as an e
 
     **Input**
     - *Au4L4-nosymm.fchk*
-    - *AU4L4-NOSYMM.47*
+    - *Au4L4-nosymm.47*
     - *Au4L4.id.rev*
-    - *AU.47*
-    - *AU4L4-NOSYMM-L-1-P0.47*
-    - *AU4L4-NOSYMM-L-2-P0.47*
-    - *AU4L4-NOSYMM-L-3-P0.47*
-    - *AU4L4-NOSYMM-L-4-P0.47*
+    - *Au-d10.47*
+    - *Au4L4-nosymm-L-1-p0.47*
+    - *Au4L4-nosymm-L-2-p0.47*
+    - *Au4L4-nosymm-L-3-p0.47*
+    - *Au4L4-nosymm-L-4-p0.47*
 
     **Command**
     ```
-    python SVDO.py Au4L4-nosymm.fchk AU4L4-NOSYMM.47 Au4L4.id.rev > svdo.log
+    python FAMO.py Au4L4-nosymm.fchk AU4L4-NOSYMM.47 Au4L4.id.rev > Au4L4.famo
     ```
 
     **Output**
-    - *Au4L4-nosymm_svdmo.fchk*
+    - *Au4L4-nosymm_famo.fchk*
     This file stores a new set of occupied orbitals which as a whole is equivalent to the canonical MOs as directly computed in Gaussian. The new set of orbitals is formed according to a "maximal overlap" principle, so those with large eigenvalues are "maximally overlapped" with corresponding orbitals in the reference state, while those with small eigenvalues are "minimally overlapped". Note that these orbitals are all fully occupied, which makes this method different from density partitioning methods (such as NBO, AdNDP, etc.).
 
-    - *Au4L4-nosymm_svdfo.fchk*
-    The corresponding orbitals that are occupied in the reference state and are biorthogonal with the above orbitals given in the `Au4L4-nosymm_svdmo.fchk` file.
-
-    - *svdo.log*
+    - *Au4L4.famo*
     This file collects the output message of the alignment script. Most contents should be self-explanatory. Some important information are given below with more descriptions.
 
     ```
-    #electrons in each fragment:
-    [9 9 9 9 9 9 9 9]
-    #electrons in whole molecule:
-    73
+    NO. of electron pairs in the complex: ...
+    NO. of electron pairs in fragments: ...
     ```
-    These lines print the NO. of electron pairs (in closed-shell calculations, or NO. of electrons for each spin in open-shell calculations) in each fragment as well as the whole molecule. Note that the electron count is not preserved during the fragmentation. The whole cluster [Au4(PH3)4]2+ has 73 electron pairs, while the NO. of electron pairs of fragments sum up to 72. Hence in this case, there will one "unmatched" orbital with eigenvalue exactly equal to 0.
+    These lines print the NO. of electron pairs (in closed-shell calculations, or NO. of electrons for each spin in open-shell calculations) in each fragment as well as the whole molecule. Note that the electron count has not to be conserved during the fragmentation.
 
     ```
-    Overlap:
-    [1.    1.    1.    1.    1.    1.    1.    1.    1.    1.    1.    1.
-     ...
-     0.995 0.995 0.992 0.992 0.992 0.991 0.991 0.991 0.977 0.915 0.915 0.915]
-    0 orbitals have singular values smaller than 1e-4 and are moved to the other group.
+    Inactive    space: ...
+    Deformed    space: ...
+    Transferred space: ...
+    Unique      space: ...
     ```
-    This is the list of eigenvalues of the cross-overlap matrix between real state and reference state. An eigenvalue of 1 means that this orbital is completely identical in both states. An eigenvalue close to 1 means a small deformation and an eigenvalue close to 0 means significant deformation. In this example, most electrons remain unchanged because the electrons of [Au]+ and [PH3] ligands are either core electrons or inert bonding electrons. The four electron pairs involved in [PH3]->[Au]+ donation are the most active electrons among all, whose associated eigenvalues are still larger than 0.9, indicating that they are almost unchanged during the aggregation of all eight fragments. If some orbitals have eigenvalues smaller than a certain threshold (by default 1e-4), these orbitals will also be considered as "unmatched".
+    These liens give the NO. of orbitals in each space.
+    If electrons are not conserved in fragmentation, for example, there are N0 occupied orbitals in the molecule but a total number of Nf occupied orbitals in the fragments, then there would be |N0-Nf| orbitals in the Unique space. For those orbitals that are both occupied in molecule and fragments, they can be almost unchanged (Inactive), somewhat deformed (Deformed), or completely different (Transferred). They will be collected into corresponding space by their overlaps (singular values). This categorization is done, however, by a pre-defined threshold and is merely for ease of analysis.
 
     ```
-    Real orbitals:
-    #orbitals to diagonalize by Fock matrix: (1, 380)
-    Diagonalized Fock matrix:
-    [-0.583]
+    T+U space diagonalized by Fock matrix.
+    I+D space aligned to FMOs.
     ```
-    If there are orbitals appearing as "unmatched" during the alignment, then the OrbAlign program will further perform a diagonalization of Fock matrix within the space formed by the unmatch orbitals. The diagonalized Fock matrix can then be taken as "pseudo orbital energies" of the new orbitals.
+    These two lines tell the users how the orbitals are canonicalized. By default, the Transferred (T) space and Unique (U) space are diagonalized by Fock matrix, while the Inactive (I) space and Deformed (D) space aligned back to FMOs.This, however, is not the only usage. In the future version of FAMO code, options will be open for users to select.
 
     ```
-    Reference orbitals:
-    #orbitals to diagonalize by Fock matrix: (0, 380)
-    Diagonalized Fock matrix
-    []
+    FAMO saved to file ..._famo.fchk
     ```
-    A similar diagonalization step is performed on the "unmatched" orbitals of the reference state if a) there are more electrons in fragments than in whole molecule; or b) there are very small eigenvalues appearing during alignment.
+    For visualization of FAMOs, open this fchk with your favourite visualizer and plot relevant orbitals.
+
+    ```
+    Mulliken population analysis of FAMO in the basis of AO
+    Fragment contribution to each FAMO:
+                  Eigenvalue     1 Au        2 Au        3 Au       ...
+         1    F1    0.997903    0.999270    0.001081    0.001081    ...
+         2    F1    0.998251    1.003619   -0.000713   -0.000713    ...
+         .     .           .           .           .           .
+         .     .           .           .           .           .
+         .     .           .           .           .           .
+        72    F8    0.947447   -0.006695   -0.006695   -0.006695    ...
+        73     U   -0.582759    0.254871    0.254871    0.254871    ...
+      U_total                   0.254871    0.254871    0.254871    ...
+       Total      145.999999   18.879730   18.879730   18.879730    ...
+      Nuclear     148.000000   19.000000   19.000000   19.000000    ...
+       Charge       2.000001    0.120270    0.120270    0.120270    ...
+    ```
+    This section performs a Mulliken population analysis of each FAMO and output how much each fragment contributes to each FAMO.
+    The first column is the orbital id.
+    The second column is a short identifier for readers to quickly identify the nature of orbitals. Depending on how orbitals are canonicalized in the last step, this identifier will vary along with the eigenvalues given in the 3rd column. In the default scenario, 'F1' denotes that this is a FAMO that is aligned back to FMO of fragment 1, and the following eigenvalue is the corresponding overlap. 'T/U' denotes that this a FAMO from Transferred/Unique space, and the following eigenvalue is the correpsonding energy since the T/U space is canonicalized by energy.
+    The remaining columns are the contributions of each fragment to each FAMO using a Mulliken population analysis algorithm.
+    The last a few lines in this section prints a summary of the Mulliken population analysis. "U_total" denotes the total population of orbitals in the Unique space, while "Total" indicates all orbitals. "Nuclear" denotes the nuclear charge of each fragment. Hence "Total" minus "Nuclear" are just the Mulliken charge of the fragments, as given in the "Charge" line.
+
+    For spin-polarized systems, everything will be done twice, for alpha and beta space respectively.
 
 ## Relevant Publications
+For more details of the method, see: Zhang J.-X., Sheong F. K., et al. to be submitted
 For application in gold clusters, see: https://pubs.acs.org/doi/10.1021/acs.inorgchem.0c00649
-For application in metallaaromatics, see: Hua Y., Zhang J.-X., et al, to be submitted
+For application in metallaaromatics, see: Hua Y., Zhang J.-X., et al. to be submitted
 
 

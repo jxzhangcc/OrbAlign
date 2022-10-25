@@ -1,0 +1,15 @@
+%chk=Au4L4-nosymm-L-1-p0.chk
+#p pbe1pbe/def2TZVP pop=nboread int=ultrafine nosymm
+
+Au4L4-nosymm-L-1-p0
+
+0 1
+ P                  2.33876700    2.33876700    2.33876700
+ H                  3.21542500    1.65931900    3.21542500
+ H                  3.21542500    3.21542500    1.65931900
+ H                  1.65931900    3.21542500    3.21542500
+
+ $nbo archive filename=Au4L4-nosymm-L-1-p0 BNDIDX SKIPBO $end
+
+
+
