@@ -1,7 +1,7 @@
 # OrbAlign
 **Orbital Alignment**
 
-A python-based quantum chemistry bonding analysis tool to align the occupied orbitals of a molecule towards its fragments so that trivial orbitals (that originates from isolated fragments, e.g. core electrons and inert bonds) will be labelled as "maximially overlapped orbitals", while non-trivial orbitals (that originates from fragment interactions or involves additional electrons) will be labelled as "minimally overlapped orbitals".
+A python-based quantum chemistry bonding analysis tool to align the occupied orbitals of a molecule towards its fragments so that trivial orbitals (that originates from isolated fragments, e.g. core electrons and inert bonds) will be identified as "maximially overlapped orbitals", while non-trivial orbitals (that originates from fragment interactions or involves additional electrons) will be identified as "minimally overlapped orbitals".
 
 ## Requirement
 - Python 3
