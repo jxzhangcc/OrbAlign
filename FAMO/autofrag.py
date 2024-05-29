@@ -61,7 +61,7 @@ def main():
     assert len(charges) == nfrag
     assert len(muls) == nfrag
     assert len(labels) == nfrag
-    print(np.array((fragmentation, charges, muls, labels, links)).T)
+    print(np.array((fragmentation, charges, muls, labels, links), dtype=object).T)
 
     atids = np.array(sorted(parse_index(','.join(fragmentation))))
     if atids.shape != (len(mol.atoms),) or not np.allclose(atids, np.arange(1, len(mol.atoms)+1)):
