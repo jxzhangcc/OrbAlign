@@ -1,7 +1,7 @@
 import os
 import re
-from chemistry.atom import Atom
-from chemistry.molecule import Molecule
+from atom import Atom
+from molecule import Molecule
 
 def parse_gjf(filename):
     if os.path.splitext(filename)[1] not in ('.gjf', '.com'):
